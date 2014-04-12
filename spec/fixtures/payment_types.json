@@ -1,0 +1,33 @@
+{
+    "payment_types": [
+    {
+        "id": "76f36c88-74cb-102e-a432-fef7de6f9392",
+        "name": "Cash",
+        "payment_type_id": "1",
+        "config": {}
+    },
+    {
+        "id": "77035c42-74cb-102e-a432-fef7de6f9392",
+        "name": "Cheque",
+        "payment_type_id": "2",
+        "config": {}
+    },
+    {
+        "id": "7704f066-74cb-102e-a432-fef7de6f9392",
+        "name": "Credit Card",
+        "payment_type_id": "3",
+        "config": {}
+    },
+    {
+        "id": "77099cec-74cb-102e-a432-fef7de6f9392",
+        "name": "Eftpos",
+        "payment_type_id": "4",
+        "config": {}
+    },
+    {
+        "id": "770d1368-74cb-102e-a432-fef7de6f9392",
+        "name": "DPS Eftpos",
+        "payment_type_id": "5",
+        "config": {}
+    }]
+}

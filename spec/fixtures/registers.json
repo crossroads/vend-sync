@@ -1,0 +1,33 @@
+{
+    "registers": [
+    {
+        "id": "6e1c67ff-80e4-11df-b0bf-4040f540b50a",
+        "name": "Main Register",
+        "outlet_id": "6e1ae160-80e4-11df-b0bf-4040f540b50a",
+        "print_receipt": "1",
+        "receipt_header": "<img src=\"/uploads/skins/demo-general/4534ddd38fc5d4c5db032c96b78fa57ce9d3ace5.png\"/><h1>Topline Goods</h1>",
+        "receipt_footer": "<h1>Thanks for stopping by</h1><div id=\"powered_by\">Powered by vendhq.com</div>",
+        "receipt_style_sheet": "/css/receipt/receipt_80.css?v=1.26",
+        "invoice_prefix": "",
+        "invoice_suffix": "",
+        "invoice_sequence": "24",
+        "register_open_count_sequence": "38",
+        "register_open_time": "2010-10-08 09:42:58",
+        "register_close_time": ""
+    },
+    {
+        "id": "9d44bcce-b4f2-11df-a32f-4040f540b50a",
+        "name": "Parnell Register",
+        "outlet_id": "8d4db5df-953d-11df-a4b4-4040f540b50a",
+        "print_receipt": "1",
+        "receipt_header": "<img src=\"/uploads/skins/demo-general/4534ddd38fc5d4c5db032c96b78fa57ce9d3ace5.png\"/><h1>Topline Goods</h1>",
+        "receipt_footer": "<h1>Thanks for stopping by</h1><div id=\"powered_by\">Powered by vendhq.com</div>",
+        "receipt_style_sheet": "/css/receipt/receipt_80.css?v=1.26",
+        "invoice_prefix": "",
+        "invoice_suffix": "",
+        "invoice_sequence": "60",
+        "register_open_count_sequence": "14",
+        "register_open_time": "2010-09-11 22:02:27",
+        "register_close_time": ""
+    }]
+}

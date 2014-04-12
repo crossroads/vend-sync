@@ -1,0 +1,11 @@
+{
+    "users": [
+    {
+        "id": "78cf7c68-74cb-102e-a432-fef7de6f9392",
+        "username": "Bob",
+        "name": "Bob Smith",
+        "outlet_id": "",
+        "outlet_name": "",
+        "account_type": "admin"
+    }]
+}

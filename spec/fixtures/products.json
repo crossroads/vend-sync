@@ -1,0 +1,79 @@
+{
+    "products": [
+    {
+        "id": "0515649e-80e5-11df-b0bf-4040f540b50a",
+        "source_id": "magento-123",
+        "source_variant_id": "magento-variant-1-123",
+        "handle": "abc123",
+        "active": true,
+        "name": "MacBook Pro 15&quot;",
+        "tags": "Apple, iPad",
+        "description": "The mobile computing powerhouse.",
+        "variant_option_one_name": "Size",
+        "variant_option_one_value": "15",
+        "variant_option_two_name": null,
+        "variant_option_two_value": "",
+        "variant_option_three_name": null,
+        "variant_option_three_value": "",
+        "image": "/uploads/product/3eb691e90914967d5d25f4c7c3cbc310662c98e5_thumb.png",
+        "sku": "macbookpro15",
+        "brand_name": "MacBook",
+        "supplier_name": "Apple",
+        "inventory": [
+        {
+            "outlet_id": "8319a320-586e-102e-86b1-3945ad97ead1",
+            "outlet_name": "Our discount store",
+            "count": "0.00000",
+            "reorder_point": "",
+            "restock_level": ""
+        },
+        {
+            "outlet_id": "83189cdc-586e-102e-86b1-3945ad97ead1",
+            "outlet_name": "Our retail store",
+            "count": "22.00000",
+            "reorder_point": "33",
+            "restock_level": "11"
+        }],
+        "price_book_entries": [
+        {
+            "id": "164081ec-83cc-11df-b0bf-4040f540b50a",
+            "product_id": "0515649e-80e5-11df-b0bf-4040f540b50a",
+            "type": "GENERAL",
+            "customer_group_name": "All customers",
+            "customer_group_id": "f823c3c2-83cb-11df-b0bf-4040f540b50a",
+            "price": "1162.17",
+            "tax": "174.33",
+            "tax_id": "53b3501c-887c-102d-8a4b-a9cf13f17faa",
+            "tax_rate": "0",
+            "display_retail_price_tax_inclusive": "0",
+            "min_units": "5.00",
+            "max_units": "",
+            "valid_from": "",
+            "valid_to": ""
+        },
+        {
+            "id": "1fa0344e-9dd5-11df-92db-4040f540b50a",
+            "product_id": "0515649e-80e5-11df-b0bf-4040f540b50a",
+            "type": "BASE",
+            "customer_group_name": "All customers",
+            "customer_group_id": "6e1dee9e-80e4-11df-b0bf-4040f540b50a",
+            "price": "1999.13",
+            "tax": "299.87",
+            "tax_id": "53b3501c-887c-102d-8a4b-a9cf13f17faa",
+            "tax_rate": "0",
+            "display_retail_price_tax_inclusive": "0",
+            "min_units": "",
+            "max_units": "",
+            "valid_from": "",
+            "valid_to": ""
+        }],
+        "price": "1999.13",
+        "tax": "299.87",
+        "tax_id": "53b3501c-887c-102d-8a4b-a9cf13f17faa",
+        "tax_rate": "0.150000",
+        "tax_name": "NZ GST",
+        "display_retail_price_tax_inclusive": "0",
+        "updated_at": "2010-09-30 19:22:52",
+        "deleted_at": ""
+    }]
+}

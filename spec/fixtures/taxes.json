@@ -1,0 +1,38 @@
+{
+    "taxes": [
+        {
+            "id": "63b451ec-887c-102d-8a4b-a9cf13f17faa",
+            "name": "Multi One",
+            "rate": 0.21,
+            "rates": [
+                {
+                    "id": "7d3d3ec3-e8f2-11e2-8b32-080027f3add4",
+                    "rate": 0.07,
+                    "name": "An odd rate of sorts"
+                },
+                {
+                    "id": "7d3febed-e8f2-11e2-8b32-080027f3add4",
+                    "rate": 0.14,
+                    "name": "Another odd rate of sorts"
+                }
+            ]
+        },
+        {
+            "id": "73b451ec-887c-102d-8a4b-a9cf13f17faa",
+            "name": "No Tax",
+            "rate": 0,
+            "rates": [
+                {
+                    "id": "7d37478a-e8f2-11e2-8b32-080027f3add4",
+                    "rate": 0,
+                    "name": "No Tax"
+                }
+            ]
+        },
+        {
+            "id": "53b451ec-887c-102d-8a4b-a9cf13f17faa",
+            "name": "AUS GST",
+            "rate": 0.1
+        }
+    ]
+}

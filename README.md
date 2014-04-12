@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+vend-sync account username password [database=vend_sync]
 
 ## Contributing
 
