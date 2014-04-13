@@ -11,8 +11,7 @@ module Vend::Sync
     def import(class_names = all_class_names)
       Array.wrap(class_names).each do |class_name|
         resources = client.send(class_name).all
-        klass = build_class(class_name)
-        build_resources(klass, resources)
+        build_resources(class_name, resources)
       end
     end
 
@@ -29,77 +28,91 @@ module Vend::Sync
       ]
     end
 
-    def build_table(class_name)
-      table_name = class_name.to_s.underscore.pluralize
+    def build_table_name(class_name)
+      class_name.to_s.underscore.pluralize
+    end
+
+    def build_table(table_name, records)
       unless connection.table_exists?(table_name)
         connection.create_table table_name, id: false
       end
-    end
-
-    def build_class(class_name)
-      if Vend::Sync.const_defined?(class_name)
-        Vend::Sync.const_get(class_name)
-      else
-        build_table(class_name)
-        klass = Vend::Sync.const_set class_name, Class.new(ActiveRecord::Base)
-        klass.inheritance_column = :_type_disabled
-        klass
+      records.each do |attributes|
+        attributes.each do |key, value|
+          build_column(table_name, key, value)
+        end
       end
     end
 
-    def build_column(klass, key, value)
-      unless klass.column_names.include?(key)
-        type = case value
+    def build_column(table_name, key, value)
+      unless connection.column_exists?(table_name, key)
+        connection.add_column(table_name, key, column_type(key, value))
+        if key == 'id'
+          connection.add_index(table_name, key, unique: true)
+        elsif key.ends_with?('_id')
+          connection.add_index(table_name, key)
+        end
+      end
+    end
+
+    def column_type(key, value)
+      if key == 'id'
+        :string
+      else
+        case value
         when Integer
-          :integer
+          :decimal
         when TrueClass, FalseClass
           :boolean
         else
-          :text 
+          :text
         end
-        connection.add_column(klass.table_name, key, type)
-        klass.reset_column_information
       end
     end
 
-    def build_resources(klass, resources)
+    def build_resources(class_name, resources)
       self.imports = {}
+      table_name = build_table_name(class_name)
       resources.each do |resource|
-        build_resource(klass, resource.attrs)
+        build_resource(table_name, resource.attrs)
       end
-      imports.each do |klass, models|
-        klass.import models
-      end
-    end
-
-    def build_resource(klass, attrs)
-      attributes = {}
-      attrs.each do |key, value|
-        case value
-        when Array
-          value.each do |v|
-            build_resource(child_class(key), v.merge(foreign_key(klass, attrs)))
+      imports.each do |table_name, records|
+        build_table(table_name, records)
+        Upsert.batch(connection, table_name) do |upsert|
+          records.each do |attributes|
+            upsert.row(attributes.slice('id'), attributes.slice!('id'))
           end
-        when Hash
-          value.each do |k, v|
-            build_column(klass, "#{key}_#{k}", v)
-            attributes["#{key}_#{k}"] = v
-          end
-        else
-          build_column(klass, key, value)
-          attributes[key] = value
         end
       end
-      imports[klass] ||= []
-      imports[klass] << klass.new(attributes)
     end
 
-    def child_class(key)
-      build_class(key.singularize.camelcase)
+    def build_resource(table_name, attrs)
+      if id = attrs['id']
+        attributes = {}
+        attrs.each do |key, value|
+          unless key.ends_with?('_set')
+            case value
+            when Array
+              value.each do |v|
+                build_resource(key, v.merge(foreign_key(table_name, id)))
+              end
+            when Hash
+              value.each do |k, v|
+                attributes["#{key}_#{k}"] = v
+              end
+            else
+              attributes[key] = value
+            end
+          end
+        end
+        imports[table_name] ||= []
+        imports[table_name] << attributes
+      else
+        puts "skipping composite key #{table_name}: #{attrs.keys.join(', ')}"
+      end
     end
 
-    def foreign_key(klass, attrs)
-      {klass.to_s.demodulize.underscore + '_id' => attrs['id']}
+    def foreign_key(table_name, id)
+      {table_name.singularize + '_id' => id}
     end
   end
 end

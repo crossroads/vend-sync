@@ -1,6 +1,7 @@
 require 'active_record'
-require 'activerecord-import'
+require 'pg_hstore'
 require 'openssl'
+require 'upsert'
 require 'vend'
 
 require 'vend/sync/version'

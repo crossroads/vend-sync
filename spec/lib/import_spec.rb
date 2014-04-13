@@ -13,7 +13,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/outlets.json')
       )
       subject.import(:Outlet)
-      Vend::Sync::Outlet.count.should eql(2)
+      count(:outlets).should eql(2)
     end
 
     it 'should import products' do
@@ -21,7 +21,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/products.json')
       )
       subject.import(:Product)
-      Vend::Sync::Product.count.should eql(1)
+      count(:products).should eql(1)
     end
 
     it 'should import customers' do
@@ -29,7 +29,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/customers.json')
       )
       subject.import(:Customer)
-      Vend::Sync::Customer.count.should eql(2)
+      count(:customers).should eql(2)
     end
 
     it 'should import payment types' do
@@ -37,7 +37,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/payment_types.json')
       )
       subject.import(:PaymentType)
-      Vend::Sync::PaymentType.count.should eql(5)
+      count(:payment_types).should eql(5)
     end
 
     it 'should import registers' do
@@ -45,7 +45,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/registers.json')
       )
       subject.import(:Register)
-      Vend::Sync::Register.count.should eql(2)
+      count(:registers).should eql(2)
     end
 
     it 'should import register sales' do
@@ -53,8 +53,8 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/register_sales.json')
       )
       subject.import(:RegisterSale)
-      Vend::Sync::RegisterSale.count.should eql(1)
-      Vend::Sync::RegisterSaleProduct.count.should eql(2)
+      count(:register_sales).should eql(1)
+      count(:register_sale_products).should eql(2)
     end
 
     it 'should import taxes' do
@@ -62,7 +62,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/taxes.json')
       )
       subject.import(:Tax)
-      Vend::Sync::Tax.count.should eql(3)
+      count(:taxes).should eql(3)
     end
 
     it 'should import users' do
@@ -70,7 +70,13 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/users.json')
       )
       subject.import(:User)
-      Vend::Sync::User.count.should eql(1)
+      count(:users).should eql(1)
     end
+  end
+
+  def count(table_name)
+    ActiveRecord::Base.connection.select_value(
+      "select count(*) from #{table_name}"
+    ).to_i
   end
 end
