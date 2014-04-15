@@ -55,8 +55,10 @@ module Vend::Sync
     end
 
     def column_type(key, value)
-      if key == 'id'
+      if key == 'id' or key.ends_with?('_id')
         :string
+      elsif key.ends_with?('_at')
+        :datetime
       else
         case value
         when Integer
@@ -89,25 +91,23 @@ module Vend::Sync
       if id = attrs['id']
         attributes = {}
         attrs.each do |key, value|
-          unless key.ends_with?('_set')
-            case value
-            when Array
-              value.each do |v|
-                build_resource(key, v.merge(foreign_key(table_name, id)))
-              end
-            when Hash
-              value.each do |k, v|
-                attributes["#{key}_#{k}"] = v
-              end
-            else
-              attributes[key] = value
+          key = key + '_' if key.ends_with?('_set')
+          case value
+          when Array
+            value.each do |v|
+              build_resource(key, v.merge(foreign_key(table_name, id)))
             end
+          when Hash
+            build_resource(key.pluralize, value)
+            attributes[key + '_id'] = value['id']
+          else
+            attributes[key] = value if value.present?
           end
         end
         imports[table_name] ||= []
         imports[table_name] << attributes
       else
-        puts "skipping composite key #{table_name}: #{attrs.keys.join(', ')}"
+        # puts "skipping composite key #{table_name}: #{attrs.keys.join(', ')}"
       end
     end
 
