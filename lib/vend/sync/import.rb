@@ -5,13 +5,13 @@ module Vend::Sync
     delegate :connection, to: 'ActiveRecord::Base'
 
     def initialize(address, username, password)
+      Upsert.logger.level = Logger::INFO
       build_client(address, username, password)
     end
 
     def import(class_names = all_class_names)
       Array.wrap(class_names).each do |class_name|
-        resources = client.send(class_name).all
-        build_resources(class_name, resources)
+        build_imports(class_name)
       end
     end
 
@@ -71,11 +71,29 @@ module Vend::Sync
       end
     end
 
-    def build_resources(class_name, resources)
+    def fetch_resources(class_name)
+      klass = client.send(class_name)
+      if klass.target_class.accepts_scope?(:since) and
+          since = last_updated_at(class_name)
+        klass.since(since)
+      else
+        klass.all
+      end
+    end
+
+    def last_updated_at(class_name)
+      table_name = build_table_name(class_name)
+      if connection.table_exists?(table_name) and
+          connection.column_exists?(table_name, :updated_at)
+        connection.select_value("select max(updated_at) from #{table_name}")
+      end
+    end
+
+    def build_imports(class_name)
       self.imports = {}
       table_name = build_table_name(class_name)
-      resources.each do |resource|
-        build_resource(table_name, resource.attrs)
+      fetch_resources(class_name).each do |resource|
+        build_import(table_name, resource.attrs)
       end
       imports.each do |table_name, records|
         build_table(table_name, records)
@@ -87,18 +105,19 @@ module Vend::Sync
       end
     end
 
-    def build_resource(table_name, attrs)
+    def build_import(table_name, attrs)
       if id = attrs['id']
         attributes = {}
         attrs.each do |key, value|
+          # append _ to keys ending in _set to prevent conflict with upsert
           key = key + '_' if key.ends_with?('_set')
           case value
           when Array
             value.each do |v|
-              build_resource(key, v.merge(foreign_key(table_name, id)))
+              build_import(key, v.merge(foreign_key(table_name, id)))
             end
           when Hash
-            build_resource(key.pluralize, value)
+            build_import(key.pluralize, value)
             attributes[key + '_id'] = value['id']
           else
             attributes[key] = value if value.present?

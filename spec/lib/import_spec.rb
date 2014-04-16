@@ -9,7 +9,7 @@ describe Vend::Sync::Import do
 
   describe '#import' do
     it 'should import outlets' do
-      stub_request(:get, 'https://username:password@account.vendhq.com/api/outlets').to_return(
+      stub_request(:get, %r{/api/outlets}).to_return(
         body: File.read('spec/fixtures/outlets.json')
       )
       subject.import(:Outlet)
@@ -17,7 +17,7 @@ describe Vend::Sync::Import do
     end
 
     it 'should import products' do
-      stub_request(:get, 'https://username:password@account.vendhq.com/api/products').to_return(
+      stub_request(:get, %r{/api/products}).to_return(
         body: File.read('spec/fixtures/products.json')
       )
       subject.import(:Product)
@@ -25,7 +25,7 @@ describe Vend::Sync::Import do
     end
 
     it 'should import customers' do
-      stub_request(:get, 'https://username:password@account.vendhq.com/api/customers').to_return(
+      stub_request(:get, %r{/api/customers}).to_return(
         body: File.read('spec/fixtures/customers.json')
       )
       subject.import(:Customer)
@@ -33,7 +33,7 @@ describe Vend::Sync::Import do
     end
 
     it 'should import payment types' do
-      stub_request(:get, 'https://username:password@account.vendhq.com/api/payment_types').to_return(
+      stub_request(:get, %r{/api/payment_types}).to_return(
         body: File.read('spec/fixtures/payment_types.json')
       )
       subject.import(:PaymentType)
@@ -41,17 +41,21 @@ describe Vend::Sync::Import do
     end
 
     it 'should import registers' do
-      stub_request(:get, 'https://username:password@account.vendhq.com/api/registers').to_return(
+      stub_request(:get, %r{/api/registers}).to_return(
         body: File.read('spec/fixtures/registers.json')
       )
       subject.import(:Register)
       count(:registers).should eql(2)
     end
 
-    it 'should import register sales' do
-      stub_request(:get, 'https://username:password@account.vendhq.com/api/register_sales?page_size=200').to_return(
+    it 'should import register sales updated since the last import' do
+      stub_request(:get, %r{/api/register_sales\?page_size=200}).to_return(
         body: File.read('spec/fixtures/register_sales.json')
       )
+      stub_request(:get, %r{/api/register_sales/since/2010-09-03\+15:10:30\?page_size=200}).to_return(
+        body: '{"register_sales": []}'
+      )
+      subject.import(:RegisterSale)
       subject.import(:RegisterSale)
       count(:register_sales).should eql(1)
       count(:register_sale_products).should eql(2)

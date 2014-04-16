@@ -9,6 +9,8 @@
         "user_id": "631dee9f-90e4-11df-b0bf-4320f540b50a",
         "user_name": "admin",
         "sale_date": "2010-09-03 15:10:30",
+        "created_at": "2010-09-03 15:10:30",
+        "updated_at": "2010-09-03 15:10:30",
         "total_price": "2737.78",
         "total_tax": "342.22",
         "tax_name": "NZ GST",
