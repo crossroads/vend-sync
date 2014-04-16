@@ -34,7 +34,9 @@ module Vend::Sync
 
     def build_table(table_name, records)
       unless connection.table_exists?(table_name)
-        connection.create_table table_name, id: false
+        connection.create_table table_name, id: false do |t|
+          t.timestamps
+        end
       end
       records.each do |attributes|
         attributes.each do |key, value|
@@ -109,8 +111,8 @@ module Vend::Sync
       if id = attrs['id']
         attributes = {}
         attrs.each do |key, value|
-          # append _ to keys ending in _set to prevent conflict with upsert
-          key = key + '_' if key.ends_with?('_set')
+          # append _ to prevent conflict with upsert
+          key = key + '_' if key.ends_with?('_sel') or key.ends_with?('_set')
           case value
           when Array
             value.each do |v|
@@ -123,6 +125,7 @@ module Vend::Sync
             attributes[key] = value if value.present?
           end
         end
+        attributes['updated_at'] = Time.now unless attrs['updated_at']
         imports[table_name] ||= []
         imports[table_name] << attributes
       else
