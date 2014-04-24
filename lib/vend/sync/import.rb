@@ -5,7 +5,7 @@ module Vend::Sync
     delegate :connection, to: 'ActiveRecord::Base'
 
     def initialize(address, username, password)
-      Upsert.logger.level = Logger::INFO
+      Upsert.logger.level = Logger::WARN
       build_client(address, username, password)
     end
 
@@ -38,20 +38,28 @@ module Vend::Sync
           t.timestamps
         end
       end
+      build_columns(table_name, records)
+    end
+
+    def build_columns(table_name, records)
+      columns = {}
       records.each do |attributes|
         attributes.each do |key, value|
-          build_column(table_name, key, value)
+          columns[key] ||= column_type(key, value)
         end
+      end
+      columns.each do |name, type|
+        build_column(table_name, name, type)
       end
     end
 
-    def build_column(table_name, key, value)
-      unless connection.column_exists?(table_name, key)
-        connection.add_column(table_name, key, column_type(key, value))
-        if key == 'id'
-          connection.add_index(table_name, key, unique: true)
-        elsif key.ends_with?('_id')
-          connection.add_index(table_name, key)
+    def build_column(table_name, name, type)
+      unless connection.column_exists?(table_name, name)
+        connection.add_column(table_name, name, type)
+        if name == 'id'
+          connection.add_index(table_name, name, unique: true)
+        elsif name.ends_with?('_id')
+          connection.add_index(table_name, name)
         end
       end
     end
@@ -92,9 +100,11 @@ module Vend::Sync
     end
 
     def build_imports(class_name)
+      print class_name.to_s.pluralize
       self.imports = {}
       table_name = build_table_name(class_name)
       fetch_resources(class_name).each do |resource|
+        print '.'
         build_import(table_name, resource.attrs)
       end
       imports.each do |table_name, records|
@@ -105,6 +115,7 @@ module Vend::Sync
           end
         end
       end
+      puts
     end
 
     def build_import(table_name, attrs)
