@@ -1,6 +1,8 @@
+require 'yaml'
+
 module Vend::Sync
   module Database
-    def self.connect(database)
+    def self.connect(database = connection_params['database'])
       ActiveRecord::Base.establish_connection(
         connection_params.merge(database: 'postgres')
       )
@@ -18,10 +20,7 @@ module Vend::Sync
     private
 
     def self.connection_params
-      {
-        adapter: 'postgresql',
-        host: 'localhost'
-      }
+      YAML.load(File.read('database.yml'))
     end
   end
 end
