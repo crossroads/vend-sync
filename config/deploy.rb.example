@@ -2,7 +2,7 @@
 lock '3.2.1'
 
 set :application, 'vend-sync'
-set :repo_url, 'git@github.com:crossroads/vend-sync.git'
+set :repo_url, 'https://github.com/crossroads/vend-sync.git'
 set :deploy_to, '/var/www/vend-sync/'
 set :rvm_ruby_version, '2.1.1'
 set :linked_files, %w{config/database.yml config/vend.yml config/schedule.rb}
