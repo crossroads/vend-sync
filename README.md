@@ -1,6 +1,8 @@
 # Vend::Sync
 
-TODO: Write a gem description
+The vend-sync gem is a one-way sync from your Vend instance to a local database. Having the data locally makes it easier for you to produce your own reporting charts / dashboards that Vend otherwise may not provide.
+
+It grabs information about outlets, products, customers, payment_types, registers, register_sales, taxes and users via the Vend API. It handles incremental updates and we usually run it daily to update the db with any new product/sales data.
 
 ## Installation
 
@@ -31,6 +33,27 @@ Or
 You should copy config/database.yml.example to config/database.yml and configure it correctly.
 
 [rake task only] Copy config/vend.yml.example to config/vend.yml and configure it correctly.
+
+## Deployment via Capistrano
+
+Copy the following files and tweak them to your needs.
+
+    config/deploy.rb.example -> config/deploy.rb
+    config/deploy/production.rb.example -> config/deploy/production.rb
+    
+Git commit/push the changes and then run the deployment
+
+    $ cap production deploy
+
+This will deploy the code to the server and setup a cron task for actions to take place.
+
+Note: you should also setup the following files on your deployment sever
+
+    DEPLOYMENT_DIR/shared/config/database.yml
+    DEPLOYMENT_DIR/shared/config/vend.yml
+    DEPLOYMENT_DIR/shared/config/schedule.rb
+
+and they will be copied to the current release during a deployment.
 
 ## Tests
 
