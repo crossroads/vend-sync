@@ -2,6 +2,9 @@ adapter: postgresql
 database: vend-sync
 username:
 password:
+host: localhost
+port: 5432
 schema_search_path: public
+min_messages: warning
 encoding: utf8
 template: template0
