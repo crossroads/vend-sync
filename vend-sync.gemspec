@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "pg"
   spec.add_dependency "pg_hstore"
   spec.add_dependency "rake"
+  spec.add_dependency "whenever"
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "webmock"
   spec.add_development_dependency "rspec"
@@ -32,5 +33,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "capistrano"
   spec.add_development_dependency "capistrano-bundler"
   spec.add_development_dependency "capistrano-rvm"
-  spec.add_development_dependency "whenever"
 end
