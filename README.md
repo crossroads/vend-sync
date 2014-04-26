@@ -18,7 +18,25 @@ Or install it yourself as:
 
 ## Usage
 
-vend-sync account username password [database=vend_sync]
+Either
+
+    $ vend-sync account username password [database=vend_sync]
+
+Or
+
+    $ rake sync
+
+## Setup
+
+You should copy config/database.yml.example to config/database.yml and configure it correctly.
+
+[rake task only] Copy config/vend.yml.example to config/vend.yml and configure it correctly.
+
+## Tests
+
+Tests can be run using
+
+    $ rake
 
 ## Contributing
 

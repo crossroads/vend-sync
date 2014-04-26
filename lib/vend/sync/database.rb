@@ -20,7 +20,8 @@ module Vend::Sync
     private
 
     def self.connection_params
-      YAML.load(File.read('database.yml'))
+      YAML.load_file( File.dirname(__FILE__) + '/../../../config/database.yml' )
     end
+
   end
 end

@@ -15,4 +15,8 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
-database.yml
+config/deploy.rb
+config/deploy/production.rb
+config/database.yml
+config/vend.yml
+config/schedule.rb

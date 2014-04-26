@@ -2,5 +2,4 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'pg'
-gem 'pg-hstore'
+gem 'debugger', group: 'development'

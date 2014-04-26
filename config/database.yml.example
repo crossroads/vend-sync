@@ -1,0 +1,7 @@
+adapter: postgresql
+database: vend-sync
+username:
+password:
+schema_search_path: public
+encoding: utf8
+template: template0

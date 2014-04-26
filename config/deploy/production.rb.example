@@ -1,0 +1,2 @@
+# example configuration for capistrano deployment
+server 'server.example.com', user: 'deployer', roles: %w{db web app}
