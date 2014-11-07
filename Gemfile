@@ -2,4 +2,4 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'debugger', group: 'development'
+gem 'byebug', group: 'development'

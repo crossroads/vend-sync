@@ -67,7 +67,7 @@ module Vend::Sync
     def column_type(key, value)
       if key == 'id' or key.ends_with?('_id')
         :string
-      elsif key.ends_with?('_at')
+      elsif key.ends_with?('_at') or key.ends_with?('_date')
         :datetime
       else
         case value
@@ -134,6 +134,9 @@ module Vend::Sync
             attributes[key + '_id'] = value['id']
           else
             attributes[key] = value if value.present?
+          end
+          if key.ends_with?('_date') and value.present?
+            attributes[key] = Time.parse(value)
           end
         end
         attributes['updated_at'] = Time.now unless attrs['updated_at']
