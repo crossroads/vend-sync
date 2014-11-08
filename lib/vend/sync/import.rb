@@ -1,5 +1,3 @@
-require 'byebug'
-
 module Vend::Sync
   class Import
     attr_accessor :client, :imports
