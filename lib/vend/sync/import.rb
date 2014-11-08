@@ -1,8 +1,12 @@
+require 'byebug'
+
 module Vend::Sync
   class Import
     attr_accessor :client, :imports
 
     delegate :connection, to: 'ActiveRecord::Base'
+
+    IGNORED_DATE_FIELDS  = %w( year_to_date )
 
     def initialize(address, username, password)
       Upsert.logger.level = Logger::WARN
@@ -67,7 +71,7 @@ module Vend::Sync
     def column_type(key, value)
       if key == 'id' or key.ends_with?('_id')
         :string
-      elsif key.ends_with?('_at') or key.ends_with?('_date')
+      elsif key.ends_with?('_at') # or key.ends_with?('_date') and !IGNORED_DATE_FIELDS.include?(key)
         :datetime
       else
         case value
@@ -135,9 +139,9 @@ module Vend::Sync
           else
             attributes[key] = value if value.present?
           end
-          if key.ends_with?('_date') and value.present?
-            attributes[key] = Time.parse(value)
-          end
+          #~ if key.ends_with?('_date') and value.present? and !IGNORED_DATE_FIELDS.include?(key)
+            #~ attributes[key] = Time.parse(value)
+          #~ end
         end
         attributes['updated_at'] = Time.now unless attrs['updated_at']
         imports[table_name] ||= []
