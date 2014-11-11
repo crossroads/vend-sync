@@ -18,3 +18,10 @@ task :sync do
   Vend::Sync::Database.connect
   Vend::Sync::Import.new(creds['account'], creds['username'], creds['password']).import
 end
+
+namespace :db do
+  desc "Delete database"
+  task :drop do
+    Vend::Sync::Database.drop
+  end
+end
