@@ -1,3 +1,5 @@
+require 'vend/enumerating/concatinator'
+
 module Vend::Sync
   class Import
     attr_accessor :client, :imports
@@ -37,7 +39,7 @@ module Vend::Sync
     def build_table(table_name, records)
       unless connection.table_exists?(table_name)
         connection.create_table table_name, id: false do |t|
-          t.timestamps
+          t.timestamps null: true
         end
       end
       build_columns(table_name, records)
@@ -85,12 +87,20 @@ module Vend::Sync
 
     def fetch_resources(class_name)
       klass = client.send(class_name)
-      if klass.target_class.accepts_scope?(:since) and
-          since = last_updated_at(class_name)
-        klass.since(since)
-      else
-        klass.all
+      collections = [ klass.all ]
+
+      # VOIDED register sales are not returned by default
+      if klass.respond_to?(:find_by_state)
+        collections << klass.find_by_state('VOIDED')
       end
+
+      collections.each do |collection|
+        if collection.accepts_scope?(:since) and
+            since = last_updated_at(class_name)
+          collection.since(since)
+        end
+      end
+      Enumerating::Concatenator.new(collections)
     end
 
     def last_updated_at(class_name)
