@@ -1,4 +1,6 @@
-# Vend::Sync
+# Vend::Sync [![TravisCI][travis-img-url]][travis-ci-url]
+[travis-img-url]: https://secure.travis-ci.org/crossroads/vend-sync.png?branch=master
+[travis-ci-url]: http://travis-ci.org/crossroads/vend-sync
 
 The vend-sync gem is a one-way sync from your Vend instance to a local database. Having the data locally makes it easier for you to produce your own reporting charts / dashboards that Vend otherwise may not provide.
 
