@@ -5,11 +5,4 @@ rvm:
 
 cache: bundler
 
-before_script:
-  - sh -c "psql -c 'create database vend_sync_test;' -U postgres"
-  - sh -c "RAILS_ENV=test bundle exec rake db:schema:load"
-
-bundler_args: --path=vendor/bundle --without heroku
-
-# Run specs
 script: "bundle exec rake"
