@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe Vend::Sync::Import do
   let(:account) { 'account' }
@@ -13,7 +13,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/outlets.json')
       )
       subject.import(:Outlet)
-      count(:outlets).should eql(2)
+      expect(count(:outlets)).to eql(2)
     end
 
     it 'should import products' do
@@ -21,7 +21,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/products.json')
       )
       subject.import(:Product)
-      count(:products).should eql(1)
+      expect(count(:products)).to eql(1)
     end
 
     it 'should import customers' do
@@ -29,7 +29,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/customers.json')
       )
       subject.import(:Customer)
-      count(:customers).should eql(2)
+      expect(count(:customers)).to eql(2)
     end
 
     it 'should import payment types' do
@@ -37,7 +37,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/payment_types.json')
       )
       subject.import(:PaymentType)
-      count(:payment_types).should eql(5)
+      expect(count(:payment_types)).to eql(5)
     end
 
     it 'should import registers' do
@@ -45,20 +45,26 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/registers.json')
       )
       subject.import(:Register)
-      count(:registers).should eql(2)
+      expect(count(:registers)).to eql(2)
     end
 
     it 'should import register sales updated since the last import' do
+      stub_request(:get, %r{/api/register_sales\?status=VOIDED}).to_return(
+        body: File.read('spec/fixtures/register_sales_voided.json')
+      )
       stub_request(:get, %r{/api/register_sales\?page_size=200}).to_return(
         body: File.read('spec/fixtures/register_sales.json')
       )
       stub_request(:get, %r{/api/register_sales/since/2010-09-03\+15:10:30\?page_size=200}).to_return(
         body: '{"register_sales": []}'
       )
+      stub_request(:get, %r{/api/register_sales/since/2010-09-03\+15:10:30\?status=VOIDED}).to_return(
+        body: '{"register_sales": []}'
+      )
       subject.import(:RegisterSale)
       subject.import(:RegisterSale)
-      count(:register_sales).should eql(1)
-      count(:register_sale_products).should eql(2)
+      expect(count(:register_sales)).to eql(2)
+      expect(count(:register_sale_products)).to eql(2)
     end
 
     it 'should import taxes' do
@@ -66,7 +72,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/taxes.json')
       )
       subject.import(:Tax)
-      count(:taxes).should eql(3)
+      expect(count(:taxes)).to eql(3)
     end
 
     it 'should import users' do
@@ -74,7 +80,7 @@ describe Vend::Sync::Import do
         body: File.read('spec/fixtures/users.json')
       )
       subject.import(:User)
-      count(:users).should eql(1)
+      expect(count(:users)).to eql(1)
     end
   end
 

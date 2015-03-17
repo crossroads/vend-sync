@@ -1,4 +1,4 @@
-require 'vend/enumerating/concatinator'
+require 'vend/enumerating/concatenator'
 
 module Vend::Sync
   class Import
