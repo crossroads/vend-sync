@@ -83,6 +83,13 @@ describe Vend::Sync::Import do
       expect(count(:users)).to eql(1)
     end
   end
+  
+  describe "#is_date_time_field?" do
+    it { expect(subject.send(:is_date_time_field?, 'year_to_date')).to eql(false) }
+    it { expect(subject.send(:is_date_time_field?, 'valid_from')).to eql(true) }
+    it { expect(subject.send(:is_date_time_field?, 'valid_to')).to eql(true) }
+    it { expect(subject.send(:is_date_time_field?, 'date_of_birth')).to eql(true) }
+  end
 
   def count(table_name)
     ActiveRecord::Base.connection.select_value(

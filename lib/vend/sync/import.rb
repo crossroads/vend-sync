@@ -6,7 +6,10 @@ module Vend::Sync
 
     delegate :connection, to: 'ActiveRecord::Base'
 
-    IGNORED_DATE_FIELDS  = %w( year_to_date )
+    # specify date fields to explicitly include/exclude
+    # *_at and *_date fields are automatically included
+    IGNORED_DATE_FIELDS  = %w(year_to_date)
+    EXPLICIT_DATE_FIELDS = %w(valid_from valid_to date_of_birth)
 
     def initialize(address, username, password)
       Upsert.logger.level = Logger::WARN
@@ -71,7 +74,7 @@ module Vend::Sync
     def column_type(key, value)
       if key == 'id' or key.ends_with?('_id')
         :string
-      elsif key.ends_with?('_at') # or key.ends_with?('_date') and !IGNORED_DATE_FIELDS.include?(key)
+      elsif is_date_time_field?(key)
         :datetime
       else
         case value
@@ -151,11 +154,9 @@ module Vend::Sync
           else
             attributes[key] = value if value.present?
           end
-          #~ if key.ends_with?('_date') and value.present? and !IGNORED_DATE_FIELDS.include?(key)
-            #~ attributes[key] = Time.parse(value)
-          #~ end
+          attributes[key] = DateTime.parse(value) if value.present? and is_date_time_field?(key)
         end
-        attributes['updated_at'] = Time.now unless attrs['updated_at']
+        attributes['updated_at'] = DateTime.now unless attrs['updated_at']
         imports[table_name] ||= []
         imports[table_name] << attributes
       else
@@ -166,5 +167,11 @@ module Vend::Sync
     def foreign_key(table_name, id)
       {table_name.singularize + '_id' => id}
     end
+    
+    def is_date_time_field?(key)
+      !IGNORED_DATE_FIELDS.include?(key) && 
+        (key.ends_with?('_date') or key.ends_with?('_at') or EXPLICIT_DATE_FIELDS.include?(key))
+    end
+    
   end
 end
