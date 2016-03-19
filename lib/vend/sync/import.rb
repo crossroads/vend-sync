@@ -139,7 +139,11 @@ module Vend::Sync
           case value
           when Array
             value.each do |v|
-              build_import(key, v.merge(foreign_key(table_name, id)))
+              if v.class == Hash
+                build_import(key, v.merge(foreign_key(table_name, id)))
+              else
+                puts "Ignoring #{key} => #{v} on #{table_name}"
+              end
             end
           when Hash
             build_import(key.pluralize, value)
