@@ -124,7 +124,7 @@ module Vend::Sync
       end
       imports.each do |table_name, records|
         build_table(table_name, records)
-        Upsert.batch(connection, table_name) do |upsert|
+        Upsert.batch(connection, table_name, {assume_function_exists: false}) do |upsert|
           records.each do |attributes|
             upsert.row(attributes.slice('id'), attributes.slice!('id'))
           end
