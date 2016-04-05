@@ -2,10 +2,9 @@ require 'spec_helper'
 
 describe Vend::Sync::Import do
   let(:account) { 'account' }
-  let(:username) { 'username' }
-  let(:password) { 'password' }
+  let(:token) { '1234567890abcdef' }
 
-  subject { described_class.new(account, username, password) }
+  subject { described_class.new(account, token) }
 
   describe '#import' do
     it 'should import outlets' do
@@ -68,7 +67,7 @@ describe Vend::Sync::Import do
     end
 
     it 'should import taxes' do
-      stub_request(:get, 'https://username:password@account.vendhq.com/api/taxes').to_return(
+      stub_request(:get, 'https://account.vendhq.com/api/taxes').to_return(
         body: File.read('spec/fixtures/taxes.json')
       )
       subject.import(:Tax)
@@ -76,7 +75,7 @@ describe Vend::Sync::Import do
     end
 
     it 'should import users' do
-      stub_request(:get, 'https://username:password@account.vendhq.com/api/users').to_return(
+      stub_request(:get, 'https://account.vendhq.com/api/users').to_return(
         body: File.read('spec/fixtures/users.json')
       )
       subject.import(:User)

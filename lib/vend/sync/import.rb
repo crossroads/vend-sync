@@ -11,9 +11,9 @@ module Vend::Sync
     IGNORED_DATE_FIELDS  = %w(year_to_date)
     EXPLICIT_DATE_FIELDS = %w(valid_from valid_to date_of_birth)
 
-    def initialize(address, username, password)
+    def initialize(address, token)
       Upsert.logger.level = Logger::WARN
-      build_client(address, username, password)
+      build_client(address, token)
     end
 
     def import(class_names = all_class_names)
@@ -24,8 +24,8 @@ module Vend::Sync
 
     private
 
-    def build_client(address, username, password)
-      @client = Vend::Client.new(address, username, password)
+    def build_client(address, token)
+      @client = Vend::Oauth2::Client.new(address, token)
     end
 
     def all_class_names
@@ -167,11 +167,11 @@ module Vend::Sync
     def foreign_key(table_name, id)
       {table_name.singularize + '_id' => id}
     end
-    
+
     def is_date_time_field?(key)
-      !IGNORED_DATE_FIELDS.include?(key) && 
+      !IGNORED_DATE_FIELDS.include?(key) &&
         (key.ends_with?('_date') or key.ends_with?('_at') or EXPLICIT_DATE_FIELDS.include?(key))
     end
-    
+
   end
 end

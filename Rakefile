@@ -16,7 +16,7 @@ desc "Sync database from Vend"
 task :sync do
   creds = YAML.load_file( File.dirname(__FILE__) + '/config/vend.yml' )
   Vend::Sync::Database.connect
-  Vend::Sync::Import.new(creds['account'], creds['username'], creds['password']).import
+  Vend::Sync::Import.new(creds['account'], creds['token']).import
 end
 
 namespace :db do
